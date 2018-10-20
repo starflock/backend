@@ -48,6 +48,7 @@ def sms_reply():
     print(body)
     print(device_id)
     print(media)
+    print(request.values)
     if media is not None and media.strip() != "":
         lat = re.search("ll=(.*?)\\,", media)
         lon = re.search(",(.*?)&", media)
