@@ -6,6 +6,7 @@ from datetime import datetime
 import pytz
 import time
 import re
+import requests
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["DATABASE_URL"]
@@ -42,13 +43,16 @@ def fires():
 
 @app.route("/sms", methods=['GET', 'POST'])
 def sms_reply():
-    body = request.values.get('Body', None)
+    url = request.values.get('MediaUrl0', None)
+    r = requests.get(url)
+    vcard = r.text
+
     device_id = request.values.get('from', None)
-    print(body)
+    print(vcard)
     print(device_id)
-    if body is not None:
-        lat = re.search("ll=(.*?)\\,", body)
-        lon = re.search(",(.*?)&", body)
+    if vcard is not None:
+        lat = re.search("ll=(.*?)\\,", vcard)
+        lon = re.search(",(.*?)&", vcard)
         device_id = device_id
         timestamp = get_time_stamp_tz()
         resp = MessagingResponse()
@@ -59,11 +63,9 @@ def sms_reply():
             resp.message("Thank You For Your disaster response")
         else:
             print("something bad happened!")
-            print("lat = " + lat)
-            print("lon = " + lon)
             resp.message("Please share your location")
 
-    return ('', 200)
+    return (resp, 200)
 
 
 def report_fire():

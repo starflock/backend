@@ -3,3 +3,4 @@ gunicorn
 psycopg2-binary
 flask_sqlalchemy
 twilio==6.19.1
+requests
