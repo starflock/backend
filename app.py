@@ -47,12 +47,12 @@ def sms_reply():
 
     if body is not None:
         lat = re.search("ll=(.*?)\\,", body)
-        long = re.search(",(.*?)&", body)
+        lon = re.search(",(.*?)&", body)
         device_id = device_id
         timestamp = get_time_stamp_tz()
         resp = MessagingResponse()
-        if lat is not None and long is not None:
-            report = report_meta(lat, long.group(1), device_id, timestamp)
+        if lat is not None and lon is not None:
+            report = report_meta(lat.group(1), lon.group(1), device_id, timestamp)
             add_to_disaster_db(fire_report_def(report))
             resp.message("Thank You For Your disaster response")
         else:
