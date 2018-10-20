@@ -1,4 +1,3 @@
-apt-xapian-index==0.47
 blinker==1.3
 chardet==2.3.0
 cloud-init==18.3
