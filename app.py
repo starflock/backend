@@ -9,7 +9,7 @@ def fires():
         return find_fires()
 
 def report_fire():
-    print reuqest.json
+    print(reuqest.json)
     return ('', 201)
 
 def find_fires():
