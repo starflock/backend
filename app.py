@@ -47,12 +47,14 @@ def sms_reply():
     r = requests.get(url)
     vcard = r.text
 
-    device_id = request.values.get('from', None)
+    device_id = request.values.get('From', None)
     print(vcard)
     print(device_id)
     if vcard is not None:
-        lat = re.search("ll=(.*?)\\,", vcard)
+        lat = re.search("ll=(.*?)\,", vcard)
         lon = re.search(",(.*?)&", vcard)
+        print(lat)
+        print(lon)
         device_id = device_id
         timestamp = get_time_stamp_tz()
         resp = MessagingResponse()
