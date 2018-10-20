@@ -43,12 +43,14 @@ def fires():
 @app.route("/sms", methods=['GET', 'POST'])
 def sms_reply():
     body = request.values.get('Body', None)
-    device_id = request.values.get('from', None)
+    media = request.values.get('Media', None)
+    device_id = request.values.get('From', None)
     print(body)
     print(device_id)
-    if body is not None:
-        lat = re.search("ll=(.*?)\\,", body)
-        lon = re.search(",(.*?)&", body)
+    print(media)
+    if media is not None and media.strip() != "":
+        lat = re.search("ll=(.*?)\\,", media)
+        lon = re.search(",(.*?)&", media)
         device_id = device_id
         timestamp = get_time_stamp_tz()
         resp = MessagingResponse()
