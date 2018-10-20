@@ -63,6 +63,9 @@ def sms_reply():
         else:
             print("something bad happened!")
             resp.message("Please share your location")
+    else:
+        print("something bad happened!")
+        resp.message("Please share your location")
     return (str(resp), 200)
 
 
