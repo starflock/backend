@@ -44,6 +44,7 @@ def fires():
 def sms_reply():
     body = request.values.get('Body', None)
     device_id = request.values.get('from', None)
+    import pdb; pdb.set_trace()
 
     if body is not None:
         lat = re.search("ll=(.*?)\\,", body)
@@ -57,6 +58,8 @@ def sms_reply():
             resp.message("Thank You For Your disaster response")
         else:
             resp.message("Please share your location")
+
+    return ('', 200)
 
 
 def report_fire():
