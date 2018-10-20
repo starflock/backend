@@ -1,8 +1,9 @@
 from flask import *
 from flask_sqlalchemy import SQLAlchemy
+from urllib import parse
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = urlparse.urlparse(os.environ["DATABASE_URL"])
+app.config['SQLALCHEMY_DATABASE_URI'] = parse(os.environ["DATABASE_URL"])
 db = SQLAlchemy(app)
 
 class FireReport(db.Model):
