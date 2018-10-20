@@ -51,7 +51,7 @@ def sms_reply():
     print(vcard)
     print(device_id)
     if vcard is not None:
-        lat = re.search("ll=(.*?)\,", vcard)
+        lat = re.search("ll=(.*?),", vcard)
         lon = re.search(",(.*?)&", vcard)
         print(lat)
         print(lon)
