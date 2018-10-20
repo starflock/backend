@@ -44,8 +44,7 @@ def fires():
 def sms_reply():
     body = request.values.get('Body', None)
     device_id = request.values.get('from', None)
-    import pdb; pdb.set_trace()
-
+    print(request)
     if body is not None:
         lat = re.search("ll=(.*?)\\,", body)
         lon = re.search(",(.*?)&", body)
@@ -66,6 +65,7 @@ def report_fire():
     print(request.json)
     report = request.json
     add_to_disaster_db(fire_report_def(report))
+    return ('', 201)
 
 
 def find_fires():
@@ -81,11 +81,11 @@ def fire_report_def(report):
         timestamp=report['time'])
 
 
-def report_meta(lat, long, device_id, time):
+def report_meta(lat, lon, device_id, time):
     meta = {
         "location": {
             "latitude": lat,
-            "longitude": long
+            "longitude": lon
         },
         "device_id": device_id,
         "time": time
@@ -102,4 +102,3 @@ def get_time_stamp_tz():
 def add_to_disaster_db(fire_report):
     db.session.add(fire_report)
     db.session.commit()
-    return ('', 201)
