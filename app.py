@@ -44,7 +44,8 @@ def fires():
 def sms_reply():
     body = request.values.get('Body', None)
     device_id = request.values.get('from', None)
-    print(request)
+    print(body)
+    print(device_id)
     if body is not None:
         lat = re.search("ll=(.*?)\\,", body)
         lon = re.search(",(.*?)&", body)
@@ -53,9 +54,13 @@ def sms_reply():
         resp = MessagingResponse()
         if lat is not None and lon is not None:
             report = report_meta(lat.group(1), lon.group(1), device_id, timestamp)
+            print(fire_report_def(report))
             add_to_disaster_db(fire_report_def(report))
             resp.message("Thank You For Your disaster response")
         else:
+            print("something bad happened!")
+            print("lat = " + lat)
+            print("lon = " + lon)
             resp.message("Please share your location")
 
     return ('', 200)
