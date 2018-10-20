@@ -43,30 +43,26 @@ def fires():
 
 @app.route("/sms", methods=['GET', 'POST'])
 def sms_reply():
+    resp = MessagingResponse()
     url = request.values.get('MediaUrl0', None)
     r = requests.get(url)
     vcard = r.text
 
     device_id = request.values.get('From', None)
-    print(vcard)
-    print(device_id)
     if vcard is not None:
         lat = re.search("ll=(.*?),", vcard)
         lon = re.search(",(.*?)&", vcard)
-        print(lat)
-        print(lon)
         device_id = device_id
         timestamp = get_time_stamp_tz()
-        resp = MessagingResponse()
         if lat is not None and lon is not None:
             report = report_meta(lat.group(1).replace("\\", ""), lon.group(1), device_id, timestamp)
             print(fire_report_def(report))
             add_to_disaster_db(fire_report_def(report))
+            print("Nothing bad happened!")
             resp.message("Thank You For Your disaster response")
         else:
             print("something bad happened!")
             resp.message("Please share your location")
-
     return (str(resp), 200)
 
 
