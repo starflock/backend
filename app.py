@@ -65,7 +65,7 @@ def sms_reply():
             print("something bad happened!")
             resp.message("Please share your location")
 
-    return (resp, 200)
+    return ('', 200)
 
 
 def report_fire():
