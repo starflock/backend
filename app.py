@@ -1,10 +1,10 @@
 from flask import *
 from flask_sqlalchemy import SQLAlchemy
-from urllib import parse
+import urllib
 import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = parse(os.environ["DATABASE_URL"])
+app.config['SQLALCHEMY_DATABASE_URI'] = urllib.parse(os.environ["DATABASE_URL"])
 db = SQLAlchemy(app)
 
 class FireReport(db.Model):
@@ -13,6 +13,16 @@ class FireReport(db.Model):
     lon = db.Column(db.String(80))
     device_id = db.Column(db.String(80))
     timestamp = db.Column(db.String(80))
+
+    @property
+    def serialize(self):
+       return {
+           "id": self.id,
+           "lat": self.lat,
+           "lon": self.lon,
+           "device_id": self.device_id,
+           "timestamp": self.timestamp
+       }
 
 db.create_all()
 
@@ -24,11 +34,13 @@ def fires():
         return find_fires()
 
 def report_fire():
+    print(request.json)
     report = request.json
 
-    db.session.add(FireReport(lat = report['location']['latitude'], lon = report['location']['longitude'], device_id = report['device_id'], timestamp = report['timestamp']))
-    db.commit()
+    db.session.add(FireReport(lat = report['location']['latitude'], lon = report['location']['longitude'], device_id = report['device_id'], timestamp = report['time']))
+    db.session.commit()
     return ('', 201)
 
 def find_fires():
-    return ('hello', 200)
+    reports = FireReport.query.all()
+    return (jsonify(json_list=[r.serialize for r in reports]), 200)
