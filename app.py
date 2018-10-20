@@ -59,7 +59,7 @@ def sms_reply():
         timestamp = get_time_stamp_tz()
         resp = MessagingResponse()
         if lat is not None and lon is not None:
-            report = report_meta(lat.group(1), lon.group(1), device_id, timestamp)
+            report = report_meta(lat.group(1).replace("\\", ""), lon.group(1), device_id, timestamp)
             print(fire_report_def(report))
             add_to_disaster_db(fire_report_def(report))
             resp.message("Thank You For Your disaster response")
@@ -67,7 +67,7 @@ def sms_reply():
             print("something bad happened!")
             resp.message("Please share your location")
 
-    return ('', 200)
+    return (str(resp), 200)
 
 
 def report_fire():
