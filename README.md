@@ -1,8 +1,11 @@
 # backend
 The backend for Star Flock's spot that fire app.
 
-## Running
+## Running locally
+
 ```
-pip install Requirements.txt
-FLASK_APP=app.py flask run
+pip3 install -r requirements.txt
+export DATABASE_URL='sqlite:///tmp/reports.db'
+export FLASK_APP=app.py
+gunicorn app:app
 ```
