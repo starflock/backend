@@ -43,8 +43,8 @@ def fires():
 
 @app.route("/sms", methods=['GET', 'POST'])
 def sms_reply():
+    resp = MessagingResponse()
     try:
-        resp = MessagingResponse()
         url = request.values.get('MediaUrl0', None)
         device_id = request.values.get('From', None)
         r = requests.get(url)
