@@ -32,7 +32,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
 db = SQLAlchemy(app)
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
-db.create_all()
 
 
 class FireReport(db.Model):
@@ -41,6 +40,7 @@ class FireReport(db.Model):
     lon = db.Column(db.String(80))
     device_id = db.Column(db.String(80))
     timestamp = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    verified = db.Column(db.Boolean, server_default=False)
 
     @property
     def serialize(self):
@@ -49,9 +49,10 @@ class FireReport(db.Model):
             "lat": self.lat,
             "lon": self.lon,
             "device_id": self.device_id,
-            "timestamp": self.timestamp
+            "timestamp": self.timestamp,
+            "verified": self.verified
         }
-# db.create_all()
+db.create_all()
 
 @app.route("/fires", methods=["GET", "POST"])
 def fires():
@@ -86,12 +87,7 @@ def login():
         password = user_credentials["password"]
         try:
             user = auth.sign_in_with_email_and_password(email, password)
-            results = auth.get_account_info(user["idToken"])
-            is_email_verified = results["users"][0]["emailVerified"]
-            if is_email_verified:
-            	return ("Verified", 200)
-            else:
-            	return ("Unverified", 200)
+            return (user["idToken"], 200)
         except Exception as e:
             print(e)
     return ("", 200)
@@ -124,10 +120,17 @@ def find_fires():
     return (jsonify(json_list=[r.serialize for r in reports]), 200)
 
 def fire_report_def(report):
+    verified = False
+    
+    if "idToken" in report:
+        user = auth.get_account_info(report["idToken"])
+        verified = user["users"][0]["emailVerified"]
+
     return FireReport(
         lat=report["location"]["latitude"],
         lon=report["location"]["longitude"],
-        device_id=report["device_id"])
+        device_id=report["device_id"],
+        verified=verified)
 
 def report_meta(lat, lon, device_id):
     meta = {
