@@ -87,6 +87,7 @@ def login():
         password = user_credentials["password"]
         try:
             user = auth.sign_in_with_email_and_password(email, password)
+            print user["idToken"]
             return (user["idToken"], 200)
         except Exception as e:
             print(e)
@@ -104,6 +105,18 @@ def register():
             results = auth.get_account_info(user["idToken"])
             is_email_verified = results["users"][0]["emailVerified"]
             auth.send_email_verification(user["idToken"])
+            return ("", 200)
+    except Exception as e:
+        print(e)
+    return ("", 200)
+
+@app.route("/reset", methods=["GET", "POST"])
+def reset():
+    try:
+        if request.method == "POST":
+            user_credentials = request.json
+            email = user_credentials["email"]
+            auth.send_password_reset_email(email)
             return ("", 200)
     except Exception as e:
         print(e)
