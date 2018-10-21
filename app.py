@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 from twilio.twiml.messaging_response import MessagingResponse
 import os
 from datetime import datetime
@@ -19,7 +20,7 @@ class FireReport(db.Model):
     lat = db.Column(db.String(80))
     lon = db.Column(db.String(80))
     device_id = db.Column(db.String(80))
-    timestamp = db.Column(db.TimeStamp, default=datetime.datetime.utcnow)
+    timestamp = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     @property
     def serialize(self):
