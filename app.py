@@ -90,6 +90,7 @@ def login():
             return (user["idToken"], 200)
         except Exception as e:
             print(e)
+            return ("", 400)
     return ("", 200)
 
 @app.route("/register", methods=["GET", "POST"])
