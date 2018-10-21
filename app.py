@@ -11,23 +11,23 @@ import requests
 import pyrebase
 import firebase_admin
 
-apiKey = os.environ["apiKey"]
-authDomain = os.environ["authDomain"]
-databaseURL = os.environ["databaseURL"]
-projectId = os.environ["projectId"]
-messagingSenderId = os.environ["messagingSenderId"]
+api_key = os.environ["API_KEY"]
+auth_domain = os.environ["AUTH_DOMAIN"]
+database_endpoint = os.environ["DATABASE_ENDPOINT"]
+project_id = os.environ["PROJECT_ID"]
+messaging_sender_id = os.environ["MESSAGING_SENDER_ID"]
 
 config = {
-    "apiKey": apiKey,
-    "authDomain": authDomain,
-    "databaseURL": databaseURL,
-    "projectId": projectId,
+    "apiKey": api_key,
+    "authDomain": auth_domain,
+    "databaseURL": database_endpoint,
+    "projectId": project_id,
     "storageBucket": "",
-    "messagingSenderId": messagingSenderId
+    "messagingSenderId": messaging_sender_id
 }
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.secret_key = os.environ["SECRET_KEY"]
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
 db = SQLAlchemy(app)
 firebase = pyrebase.initialize_app(config)
@@ -135,6 +135,3 @@ def report_meta(lat, lon, device_id):
 def add_to_disaster_db(fire_report):
     db.session.add(fire_report)
     db.session.commit()
-
-if __name__ == "__main__":
-    app.run()
