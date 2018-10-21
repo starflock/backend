@@ -4,3 +4,5 @@ psycopg2-binary
 flask_sqlalchemy
 twilio==6.19.1
 requests
+pyrebase
+firebase_admin
