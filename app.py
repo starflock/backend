@@ -33,7 +33,7 @@ class FireReport(db.Model):
         }
 
 
-# db.create_all()
+db.create_all()
 
 @app.route('/fires', methods=['GET', 'POST'])
 def fires():
