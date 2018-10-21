@@ -62,7 +62,6 @@ def fires():
     else:
         return find_fires()
 
-
 @app.route("/sms", methods=["GET", "POST"])
 def sms_reply():
     resp = MessagingResponse()
@@ -76,14 +75,28 @@ def sms_reply():
         device_id = device_id
         report = report_meta(lat.group(1).replace("\\", ""), lon.group(1), device_id)
         add_to_disaster_db(fire_report_def(report))
-        print("Nothing bad happened!")
         resp.message("Thank You For Your disaster response")
     except Exception as ex:
         resp.message("Please share your location")
-        print(ex)
-        print("something bad happened!")
     return (str(resp), 200)
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        user_credentials = request.json
+        email = user_credentials["email"]
+        password = user_credentials["password"]
+        try:
+            user = auth.sign_in_with_email_and_password(email, password)
+            results = auth.get_account_info(user["idToken"])
+            is_email_verified = results["users"][0]["emailVerified"]
+            if is_email_verified:
+            	return ("Verified", 200)
+            else:
+            	return ("Unverified", 200)
+        except Exception as e:
+            print(e)
+    return ("", 200)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -94,6 +107,8 @@ def register():
             password = user_credentials["password"]
             user = auth.create_user_with_email_and_password(email=email,
                                                             password=password)
+            results = auth.get_account_info(user["idToken"])
+            is_email_verified = results["users"][0]["emailVerified"]
             auth.send_email_verification(user["idToken"])
             return ("", 200)
     except Exception as e:
@@ -101,24 +116,20 @@ def register():
     return ("", 200)
 
 def report_fire():
-    print(request.json)
     report = request.json
     add_to_disaster_db(fire_report_def(report))
     return ("", 201)
-
 
 def find_fires():
     yesterday = date.today() - timedelta(1)
     reports = FireReport.query.filter(FireReport.timestamp >= yesterday)
     return (jsonify(json_list=[r.serialize for r in reports]), 200)
 
-
 def fire_report_def(report):
     return FireReport(
         lat=report["location"]["latitude"],
         lon=report["location"]["longitude"],
         device_id=report["device_id"])
-
 
 def report_meta(lat, lon, device_id):
     meta = {
@@ -130,7 +141,6 @@ def report_meta(lat, lon, device_id):
     }
 
     return meta
-
 
 def add_to_disaster_db(fire_report):
     db.session.add(fire_report)
