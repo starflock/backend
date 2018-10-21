@@ -32,8 +32,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
 db = SQLAlchemy(app)
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
-
-#db.create_all()
+db.create_all()
 
 
 class FireReport(db.Model):
