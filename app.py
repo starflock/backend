@@ -30,6 +30,9 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
 db = SQLAlchemy(app)
+firebase = pyrebase.initialize_app(config)
+auth = firebase.auth()
+
 #db.create_all()
 
 
@@ -83,6 +86,21 @@ def sms_reply():
     return (str(resp), 200)
 
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    try:
+        if request.method == "POST":
+            user_credentials = request.json
+            email = user_credentials["email"]
+            password = user_credentials["password"]
+            user = auth.create_user_with_email_and_password(email=email,
+                                                            password=password)
+            auth.send_email_verification(user["idToken"])
+            return ("", 200)
+    except Exception as e:
+        print(e)
+    return ("", 200)
+
 def report_fire():
     print(request.json)
     report = request.json
@@ -118,3 +136,6 @@ def report_meta(lat, lon, device_id):
 def add_to_disaster_db(fire_report):
     db.session.add(fire_report)
     db.session.commit()
+
+if __name__ == "__main__":
+    app.run()
