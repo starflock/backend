@@ -51,8 +51,6 @@ class FireReport(db.Model):
             "device_id": self.device_id,
             "timestamp": self.timestamp
         }
-
-
 # db.create_all()
 
 @app.route("/fires", methods=["GET", "POST"])
