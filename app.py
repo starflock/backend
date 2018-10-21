@@ -88,6 +88,7 @@ def sms_reply():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     try:
+        import pdb; pdb.set_trace()
         if request.method == "POST":
             user_credentials = request.json
             email = user_credentials["email"]
