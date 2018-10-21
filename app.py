@@ -87,7 +87,6 @@ def login():
         password = user_credentials["password"]
         try:
             user = auth.sign_in_with_email_and_password(email, password)
-            print user["idToken"]
             return (user["idToken"], 200)
         except Exception as e:
             print(e)
