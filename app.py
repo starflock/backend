@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 from twilio.twiml.messaging_response import MessagingResponse
 import os
-from datetime import datetime
+from datetime import date, timedelta
 import pytz
 import time
 import re
@@ -91,7 +91,8 @@ def report_fire():
 
 
 def find_fires():
-    reports = FireReport.query.all()
+    yesterday = date.today() - timedelta(1)
+    reports = FireReport.query.filter(FireReport.timestamp >= yesterday)
     return (jsonify(json_list=[r.serialize for r in reports]), 200)
 
 
