@@ -81,8 +81,7 @@ def fire_report_def(report):
     return FireReport(
         lat=report['location']['latitude'],
         lon=report['location']['longitude'],
-        device_id=report['device_id'],
-        timestamp=report['time'])
+        device_id=report['device_id'])
 
 
 def report_meta(lat, lon, device_id):
@@ -95,11 +94,6 @@ def report_meta(lat, lon, device_id):
     }
 
     return meta
-
-
-def get_time_stamp_tz():
-    time_stamp = int(round(time.time() * 1000))
-    return datetime.fromtimestamp(float(time_stamp) / 1000, tz=pytz.UTC).isoformat()
 
 
 def add_to_disaster_db(fire_report):
