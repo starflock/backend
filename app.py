@@ -52,8 +52,6 @@ class FireReport(db.Model):
             "timestamp": self.timestamp,
             "verified": self.verified
         }
-
-
 db.create_all()
 
 @app.route("/fires", methods=["GET", "POST"])
