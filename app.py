@@ -12,7 +12,7 @@ import requests
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["DATABASE_URL"]
 db = SQLAlchemy(app)
-db.create_all()
+# db.create_all()
 
 
 class FireReport(db.Model):
@@ -33,7 +33,6 @@ class FireReport(db.Model):
         }
 
 
-db.create_all()
 
 @app.route('/fires', methods=['GET', 'POST'])
 def fires():
