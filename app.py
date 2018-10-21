@@ -40,7 +40,7 @@ class FireReport(db.Model):
     lon = db.Column(db.String(80))
     device_id = db.Column(db.String(80))
     timestamp = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    verified = db.Column(db.Boolean, server_default=False)
+    verified = db.Column(db.Boolean, default=False)
 
     @property
     def serialize(self):
