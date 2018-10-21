@@ -11,11 +11,26 @@ import requests
 import pyrebase
 import firebase_admin
 
+apiKey = os.environ["apiKey"]
+authDomain = os.environ["authDomain"]
+databaseURL = os.environ["databaseURL"]
+projectId = os.environ["projectId"]
+messagingSenderId = os.environ["messagingSenderId"]
+
+config = {
+    "apiKey": apiKey,
+    "authDomain": authDomain,
+    "databaseURL": databaseURL,
+    "projectId": projectId,
+    "storageBucket": "",
+    "messagingSenderId": messagingSenderId
+}
+
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["DATABASE_URL"]
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
 db = SQLAlchemy(app)
-db.create_all()
+#db.create_all()
 
 
 class FireReport(db.Model):
@@ -38,20 +53,20 @@ class FireReport(db.Model):
 
 # db.create_all()
 
-@app.route('/fires', methods=['GET', 'POST'])
+@app.route("/fires", methods=["GET", "POST"])
 def fires():
-    if request.method == 'POST':
+    if request.method == "POST":
         return report_fire()
     else:
         return find_fires()
 
 
-@app.route("/sms", methods=['GET', 'POST'])
+@app.route("/sms", methods=["GET", "POST"])
 def sms_reply():
     resp = MessagingResponse()
     try:
-        url = request.values.get('MediaUrl0', None)
-        device_id = request.values.get('From', None)
+        url = request.values.get("MediaUrl0", None)
+        device_id = request.values.get("From", None)
         r = requests.get(url)
         vcard = r.text
         lat = re.search("ll=(.*?),", vcard)
@@ -72,7 +87,7 @@ def report_fire():
     print(request.json)
     report = request.json
     add_to_disaster_db(fire_report_def(report))
-    return ('', 201)
+    return ("", 201)
 
 
 def find_fires():
@@ -82,9 +97,9 @@ def find_fires():
 
 def fire_report_def(report):
     return FireReport(
-        lat=report['location']['latitude'],
-        lon=report['location']['longitude'],
-        device_id=report['device_id'])
+        lat=report["location"]["latitude"],
+        lon=report["location"]["longitude"],
+        device_id=report["device_id"])
 
 
 def report_meta(lat, lon, device_id):
