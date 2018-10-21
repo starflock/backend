@@ -11,6 +11,7 @@ import requests
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["DATABASE_URL"]
 db = SQLAlchemy(app)
+db.create_all()
 
 
 class FireReport(db.Model):
@@ -18,7 +19,7 @@ class FireReport(db.Model):
     lat = db.Column(db.String(80))
     lon = db.Column(db.String(80))
     device_id = db.Column(db.String(80))
-    timestamp = db.Column(db.String(80))
+    timestamp = db.Column(db.TimeStamp, default=datetime.datetime.utcnow)
 
     @property
     def serialize(self):
@@ -52,8 +53,7 @@ def sms_reply():
         lat = re.search("ll=(.*?),", vcard)
         lon = re.search(",(.*?)&", vcard)
         device_id = device_id
-        timestamp = get_time_stamp_tz()
-        report = report_meta(lat.group(1).replace("\\", ""), lon.group(1), device_id, timestamp)
+        report = report_meta(lat.group(1).replace("\\", ""), lon.group(1), device_id)
         add_to_disaster_db(fire_report_def(report))
         print("Nothing bad happened!")
         resp.message("Thank You For Your disaster response")
@@ -84,14 +84,13 @@ def fire_report_def(report):
         timestamp=report['time'])
 
 
-def report_meta(lat, lon, device_id, time):
+def report_meta(lat, lon, device_id):
     meta = {
         "location": {
             "latitude": lat,
             "longitude": lon
         },
-        "device_id": device_id,
-        "time": time
+        "device_id": device_id
     }
 
     return meta

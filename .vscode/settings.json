@@ -1,5 +1,6 @@
 {
-    "python.linting.enabled": false,
+    "python.linting.enabled": true,
     "git.ignoreLimitWarning": true,
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "python.linting.pylintEnabled": true
 }
