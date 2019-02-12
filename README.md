@@ -23,4 +23,4 @@ https://2018.spaceappschallenge.org/challenges/volcanoes-icebergs-and-asteroids-
 
 ![alt text](https://github.com/starflock/backend/blob/master/spotifyre_diagram.png)
 
-[![NASA Space Apps Challenge 2018 - Spotifyre](https://www.youtube.com/watch?v=K54UmFABUNE "NASA Space Apps Challenge 2018 - Spotifyre")
+[NASA Space Apps Challenge 2018 - Spotifyre](https://www.youtube.com/watch?v=K54UmFABUNE)
